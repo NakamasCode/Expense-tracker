@@ -1,60 +1,31 @@
-import sqlite3
-import hashlib
+# main.py
+from cli import add_expense, view_expenses, remove_expense
+from database import create_table
 
-# connect to Sqlite (creates the file if it doesnt exist)
-conn = sqlite3.connect('expenses.db')
-cursor = conn.cursor()
-
-# create expense table
-cursor.execute("""
-   CREATE TABLE IF NOT EXISTS expenses (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      amount REAL NOT NULL,
-      category TEXT NOT NULL,
-      date TEXT NOT NULL,
-      hash TEXT NOT NULL
-   )
-""")
-
-#commit and close connection
-conn.commit()
-conn.close()
-
-def generate_hash(amount, category, date):
-   # Generate a unique sha-256 hash for an expense.
-   hash_input = f"{amount}{category}{date}".encode()
-   return hashlib.sha256(hash_input).hexdigest()
-
-def insert_expense(amount, category, date):
-    """Insert a new expense into the database."""
-    conn = sqlite3.connect("expenses.db")
-    cursor = conn.cursor()
+def main():
+    """Main program loop."""
+    create_table()  # Ensure the table exists before running anything
     
-    # Generate a hash
-    expense_hash = generate_hash(amount, category, date)
+    while True:
+        print("\n📊 Expense Tracker")
+        print("1️⃣ Add Expense")
+        print("2️⃣ View Expenses")
+        print("3️⃣ Delete Expense")
+        print("4️⃣ Exit")
+        
+        choice = input("Choose an option: ")
+        
+        if choice == "1":
+            add_expense()
+        elif choice == "2":
+            view_expenses()
+        elif choice == "3":
+            remove_expense()
+        elif choice == "4":
+            print("👋 Exiting... Goodbye!")
+            break
+        else:
+            print("❌ Invalid choice! Try again.")
 
-    cursor.execute("""
-    INSERT INTO expenses (amount, category, date, hash)
-    VALUES (?, ?, ?, ?)
-    """, (amount, category, date, expense_hash))
-
-    conn.commit()
-    conn.close()
-
-    print("✅ Expense added successfully!")
-
-def fetch_expense():
-   """Retrieve and display expenses from the database."""
-   conn.sqlite3.connect('expenses.db')
-   cursor = conn.cursor()
-   
-   cursor.execute("SELECT * FROM expenses")
-   rows = cursor.fetchall()
-   
-   conn.close()
-# Example usage (you can modify this for user input)
-amount = float(input("Enter amount: "))
-category = input("Enter category: ")
-date = input("Enter date (YYYY-MM-DD): ")
-
-insert_expense(amount, category, date)
+if __name__ == "__main__":
+    main()
