@@ -1,31 +1,32 @@
-# main.py
-from cli import add_expense, view_expenses, remove_expense
-from database import create_table
+import cli
 
 def main():
-    """Main program loop."""
-    create_table()  # Ensure the table exists before running anything
-    
     while True:
-        print("\n📊 Expense Tracker")
+        print("\n📌 EXPENSE TRACKER MENU")
         print("1️⃣ Add Expense")
         print("2️⃣ View Expenses")
-        print("3️⃣ Delete Expense")
-        print("4️⃣ Exit")
-        
-        choice = input("Choose an option: ")
-        
+        print("3️⃣ Update Expense")
+        print("4️⃣ Delete Expense")
+        print("5️⃣ Export Expenses to JSON")
+        print("6️⃣ Exit")
+
+        choice = input("Enter your choice (1-6): ").strip()
+
         if choice == "1":
-            add_expense()
+            cli.add_expense()
         elif choice == "2":
-            view_expenses()
+            cli.view_expenses()
         elif choice == "3":
-            remove_expense()
+            cli.modify_expense()
         elif choice == "4":
-            print("👋 Exiting... Goodbye!")
+            cli.remove_expense()
+        elif choice == "5":
+            cli.export_json()
+        elif choice == "6":
+            print("👋 Exiting... Have a great day!")
             break
         else:
-            print("❌ Invalid choice! Try again.")
+            print("⚠️ Invalid choice. Please enter a number between 1 and 6.")
 
 if __name__ == "__main__":
     main()
